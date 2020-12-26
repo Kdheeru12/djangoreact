@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from .serializers import BlogSerializers, RegisterSerializer
 from .models import Blog
 from rest_framework.permissions import IsAuthenticated,BasePermission, SAFE_METHODS
-
+from rest_framework_simplejwt.tokens import RefreshToken
 # Create your views here.
 @api_view(('GET',))
 def hello(request):
@@ -21,7 +21,7 @@ class PostWritePermission(BasePermission):
         return obj.user == request.user
 
 class BlogList(generics.ListCreateAPIView):
-   # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     queryset = Blog.objects.all()
     serializer_class = BlogSerializers
 class BlogDetail(generics.RetrieveUpdateDestroyAPIView,PostWritePermission):
@@ -41,3 +41,12 @@ class Register(APIView):
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
+class BlacklistTokens(APIView):
+    def post(self,request):
+        try:
+            refresh_token = request.data["refresh_token"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_400_BAD_REQUEST)

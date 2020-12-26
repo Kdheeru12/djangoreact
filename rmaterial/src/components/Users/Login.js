@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{useState}from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { useHistory } from 'react-router';
+import {AxiosSend} from './Axios'
 
 function Copyright() {
   return (
@@ -46,9 +48,56 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+//login component
+
 function Login() {
   const classes = useStyles();
+  const history = useHistory()
+  const initialState = Object.freeze({
+    username:'',
+    password:'',
+  })
+  const errorState = {
+    error: '',
+    }
+  const [data, setdata] = useState(initialState)
+  const [error, seterror] = useState(errorState)
+  const Change = (e) =>{
+    setdata({
+      ...data,
+      [e.target.name] : e.target.value.trim(),
+    })
+    
+  }
 
+  const Submit = (e) =>{
+    e.preventDefault();
+    console.log(data);
+    AxiosSend
+      .post(`token/`,{
+      username:data.username,
+      password:data.password,
+    })
+    .then((res) =>{
+      localStorage.setItem('access_token',res.data.access);
+      localStorage.setItem('refresh_token',res.data.refresh)
+      AxiosSend.defaults.headers['Authorization'] = 
+      'JWT ' + localStorage.getItem('access_token')
+      
+    })
+    .catch(error =>{
+      if (typeof error.response === 'undefined') {
+        
+        return Promise.reject(error);
+      }
+      else if (error.response.data.detail === 'No active account found with the given credentials')
+      {
+        seterror({
+          error:'Invalid username or password'
+        })
+      }
+    })
+  }
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -59,16 +108,17 @@ function Login() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form onSubmit={Submit} className={classes.form} noValidate>
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="username"
+            label="username"
+            name="username"
+            autoComplete="username"
+            onChange={Change}
             autoFocus
           />
           <TextField
@@ -81,11 +131,9 @@ function Login() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={Change}
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
+          {error.error}
           <Button
             type="submit"
             fullWidth
