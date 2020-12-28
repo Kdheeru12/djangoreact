@@ -15,6 +15,7 @@ import Container from '@material-ui/core/Container';
 import { useHistory } from 'react-router';
 import {AxiosSend} from './Axios'
  
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -84,12 +85,17 @@ export default function SignUp() {
       history.push('/login')
     })
     .catch(error =>{
+      if (typeof error.response === 'undefined') {
+        
+        return Promise.reject(error);
+      }
+      else{
       seterror({
         username:error.response.data.username,
         password:error.response.data.password,
         email:error.response.data.email,
       })
-      
+      }  
     })
   }
   return (

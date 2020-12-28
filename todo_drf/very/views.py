@@ -21,7 +21,7 @@ class PostWritePermission(BasePermission):
         return obj.user == request.user
 
 class BlogList(generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes=[IsAuthenticated]
     queryset = Blog.objects.all()
     serializer_class = BlogSerializers
 class BlogDetail(generics.RetrieveUpdateDestroyAPIView,PostWritePermission):
@@ -45,8 +45,10 @@ class BlacklistTokens(APIView):
     def post(self,request):
         try:
             refresh_token = request.data["refresh_token"]
+            print(refresh_token)
             token = RefreshToken(refresh_token)
             token.blacklist()
+            return Response(status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
             return Response(status=status.HTTP_400_BAD_REQUEST)

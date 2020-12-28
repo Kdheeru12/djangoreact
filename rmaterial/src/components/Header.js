@@ -1,13 +1,22 @@
 import React from 'react'
-import Avatar from '@material-ui/core/Avatar'
-import CardHeader from '@material-ui/core/CardHeader'
-import IconButton from '@material-ui/core/IconButton'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
+import { NavLink } from 'react-router-dom';
+import Link from '@material-ui/core/Link';
+import Button from '@material-ui/core/Button';
 
 export const Header = () => {
     return (
         <div className='Hello'>
             Header
+            <Button
+                href="#"
+                color="primary"
+                variant="outlined"
+
+                component={NavLink}
+                to="/logout"
+            >
+                Logout
+					</Button>
         </div>
     )
 }

@@ -80,10 +80,11 @@ function Login() {
     })
     .then((res) =>{
       localStorage.setItem('access_token',res.data.access);
-      localStorage.setItem('refresh_token',res.data.refresh)
+      localStorage.setItem('refresh_token',res.data.refresh);
       AxiosSend.defaults.headers['Authorization'] = 
-      'JWT ' + localStorage.getItem('access_token')
-      
+      'JWT ' + localStorage.getItem('access_token');
+
+      console.log(AxiosSend.defaults.headers)
     })
     .catch(error =>{
       if (typeof error.response === 'undefined') {

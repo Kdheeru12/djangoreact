@@ -12,6 +12,10 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import axios from 'axios'
+import {AxiosSend} from './Users/Axios'
+import { useHistory } from 'react-router';
+
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -55,11 +59,17 @@ export default function SignIn() {
   const classes = useStyles();
   const [posts, setposts] = useState([]);  
   const [loading, setloading] = useState(true);
+  const history = useHistory()
   useEffect(() => {
-      axios.get('http://127.0.0.1:8000/')
+      AxiosSend.get('http://127.0.0.1:8000/')
       .then(res => {
           setposts(res.data)
           setloading(false)
+      })
+      .catch(err =>{
+        if(err.response.status === 401){
+          history.push('/login')
+        }
       })
   }, []);
 
