@@ -4,7 +4,7 @@ export const Detail = (props) => {
     const [PostsDetail, setPostsDetail] = useState({post:null})
     const [Loading, setLoading] = useState(true);
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/${props.match.params.id}`)
+        axios.get(`http://127.0.0.1:8000/${props.match.params.id}/`)
         .then(res => setPostsDetail({post:[res.data]}))
         .catch(err => console.log(err))
         setLoading(false)

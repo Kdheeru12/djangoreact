@@ -85,6 +85,7 @@ function Login() {
       'JWT ' + localStorage.getItem('access_token');
 
       console.log(AxiosSend.defaults.headers)
+      history.push('/')
     })
     .catch(error =>{
       if (typeof error.response === 'undefined') {

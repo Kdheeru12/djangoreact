@@ -1,12 +1,7 @@
 from django.db import models
 from django.db.models import fields
 from rest_framework import serializers
-from .models import Blog,User
-
-class BlogSerializers(serializers.ModelSerializer):
-    class Meta:
-        model=Blog
-        fields = ['title','content',"categories",'user','id','slug']
+from .models import User
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:

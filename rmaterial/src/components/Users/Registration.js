@@ -76,7 +76,7 @@ export default function SignUp() {
   const Submit = (e) =>{
     e.preventDefault();
     //console.log(data);
-    AxiosSend.post(`reg`,{
+    AxiosSend.post(`users/reg`,{
       email:data.email,
       username:data.username,
       password:data.password,

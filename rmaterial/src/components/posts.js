@@ -99,7 +99,7 @@ export default function SignIn() {
         <Button size="small" color="primary">
         Share
         </Button>
-        <Button href={`/${i.id}`} size="small" color="primary">
+        <Button href={`/api/${i.slug}`} size="small" color="primary">
         Learn More
         </Button>
     </CardActions>

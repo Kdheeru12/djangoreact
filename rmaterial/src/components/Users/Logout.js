@@ -6,7 +6,7 @@ import { AxiosSend } from './Axios';
 const Logout = () => {
     const history = useHistory()
     useEffect(() => {
-        const res = AxiosSend.post(`logout`,{
+        const res = AxiosSend.post(`users/logout`,{
             refresh_token: localStorage.getItem('refresh_token'),
         })
         .then
