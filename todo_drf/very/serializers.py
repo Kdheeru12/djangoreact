@@ -7,6 +7,7 @@ class BlogSerializers(serializers.ModelSerializer):
     class Meta:
         model=Blog
         fields = ['title','content',"categories",'user','id','slug']
+        extra_kwargs = {'slug':{'read_only':True}}
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:

@@ -9,9 +9,7 @@ router.register('',BlogList,basename='blog')
 urlpatterns = router.urls
 
 # urlpatterns = [
-#     path('',BlogList.as_view({'get': 'list'}),name='hello' ),
-#     # path('<int:pk>',BlogDetail.as_view(),name='detail'),
-#     # path('api/reg',Register.as_view(),name='register'),
-#     # path('api/logout',BlacklistTokens.as_view(),name='blacklist')
-
+#     path('',BlogList.as_view(),name='hello' ),
+#     #path('<slug:pk>/',BlogDetail.as_view(),name='detail'),
+#     path('search/',ProductList.as_view(),name='prod')
 # ]

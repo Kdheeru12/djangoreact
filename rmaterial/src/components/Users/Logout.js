@@ -13,7 +13,7 @@ const Logout = () => {
         localStorage.removeItem('access_token')
         localStorage.removeItem('refresh_token')
         AxiosSend.defaults.headers['Authorization'] = null
-        history.push('/')
+        history.push('/login')
     }, [])
     return (
         <div>

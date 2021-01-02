@@ -1,8 +1,9 @@
 from django.db.models import query
 from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
+from rest_framework import response
 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import generics, serializers,status
 from rest_framework.views import APIView
@@ -11,7 +12,8 @@ from .models import Blog
 from rest_framework.permissions import IsAuthenticated,BasePermission, SAFE_METHODS
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action 
+from rest_framework import filters
 # Create your views here.
 
 # copied and pasted in views
@@ -61,16 +63,40 @@ class PostWritePermission(BasePermission):
         return obj.user == request.user
 
 
+
 # Replacing by viewsets
     
-# class BlogList(generics.ListCreateAPIView):
+# class BlogList(generics.ListAPIView):
 #     #permission_classes=[IsAuthenticated]
 #     queryset = Blog.objects.all()
+    
 #     serializer_class = BlogSerializers
+    
 # class BlogDetail(generics.RetrieveUpdateDestroyAPIView,PostWritePermission):
 #     permission_classes = [PostWritePermission]
 #     queryset = Blog.objects.all()
 #     serializer_class = BlogSerializers
+
+#     def get_object(self,queryset=None,**kwargs):
+#         item = self.kwargs.get('pk')
+#         query = get_object_or_404(Blog,slug=item)
+#         return query
+
+
+# using django filters pypi
+# class BlogFilter(filters.FilterSet):
+#     class Meta:
+#         model = Blog
+#         fields = ['slug','id']
+
+
+# # using drf filters
+# class ProductList(generics.ListAPIView):
+#     queryset = Blog.objects.all()
+#     serializer_class = BlogSerializers
+#     filter_backends = [filters.SearchFilter]
+#     search_fields = ['^slug']
+
 
 # ViewSets and methods
 
@@ -93,15 +119,41 @@ class PostWritePermission(BasePermission):
 #     pass
 
 # class BlogList(viewsets.ViewSet):
-#     permission_classes =[IsAuthenticated]
 #     queryset = Blog.objects.all()
+    
+#     permission_classes_by_action = {'list': [IsAuthenticated],
+#                                     'create':[IsAuthenticated]}
 #     def list(self,request):
 #         serializer_class = BlogSerializers(self.queryset,many=True)
 #         return Response(serializer_class.data)      
 #     def retrieve(self, request, pk=None):
-#         query = get_object_or_404(Blog,pk=pk)
+#         query = get_object_or_404(Blog,slug=pk)
 #         serializer_class = BlogSerializers(query)
 #         return Response(serializer_class.data)
+#     def create(self,request):
+#         serializer_class =BlogSerializers(data=request.data)
+#         if serializer_class.is_valid():
+#             serializer_class.user = request.user
+#             print(serializer_class.user)
+#             serializer_class.save()
+#         else:
+#             return Response(serializer_class.error_messages)
+#         return Response(serializer_class.data)
+#     def update(self,request,pk=None):
+#         serializer_class =BlogSerializers(data=request.data)
+#         if serializer_class.is_valid():
+#             serializer_class.user = request.user
+#             print(serializer_class.user)
+#             serializer_class.save()
+#         else:
+#             return Response(serializer_class.error_messages)
+#     def get_permissions(self):
+#         try:
+#             # return permission_classes depending on `action` 
+#             return [permission() for permission in self.permission_classes_by_action[self.action]]
+#         except KeyError: 
+#             # action is not set return default permission_classes
+#             return [permission() for permission in self.permission_classes]
 
 # using modelviewsets
 
@@ -109,6 +161,7 @@ class BlogList(viewsets.ModelViewSet):
     serializer_class = BlogSerializers
     
     def get_queryset(self):
+        permission_class = [IsAuthenticated]
         return Blog.objects.all()
         
     def get_object(self,queryset=None,**kwargs):
