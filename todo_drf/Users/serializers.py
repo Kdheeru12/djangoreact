@@ -1,3 +1,4 @@
+from re import L
 from django.db import models
 from django.db.models import fields
 from rest_framework import serializers
@@ -15,3 +16,8 @@ class RegisterSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+
+class GetUser(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields =('first_name','last_name','email','username')
