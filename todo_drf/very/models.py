@@ -35,3 +35,9 @@ def pre_save_post_receiver(sender,instance,*args,**kwargs):
     if not instance.slug:
         instance.slug = create_slug(instance)
 pre_save.connect(pre_save_post_receiver,sender=Blog)
+
+class  Groceries(models.Model):
+    title=models.CharField(max_length=500)
+    description = models.TextField()
+    created = models.DateTimeField(auto_now=False,auto_now_add=True)
+    price = models.FloatField()

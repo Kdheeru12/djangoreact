@@ -7,13 +7,14 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import generics, serializers,status
 from rest_framework.views import APIView
-from .serializers import BlogSerializers, RegisterSerializer
-from .models import Blog
+from .serializers import BlogSerializers, RegisterSerializer,GroceriesSerializer
+from .models import Blog,Groceries
 from rest_framework.permissions import IsAuthenticated,BasePermission, SAFE_METHODS
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import viewsets
 from rest_framework.decorators import action 
 from rest_framework import filters
+from rest_framework.pagination import PageNumberPagination
 # Create your views here.
 
 # copied and pasted in views
@@ -169,5 +170,26 @@ class BlogList(viewsets.ModelViewSet):
         query = get_object_or_404(Blog,slug=item)
         return query
 
+# class GroceriesList(viewsets.ModelViewSet):
+#     serializer_class = GroceriesSerializer
+#     filter_backends = [filters.SearchFilter]
+#     search_fields = ['^title','^description']
+#     ordering_fields = ['price']
+#     pagination_class = PageNumberPagination
+#     def get_queryset(self):
+#         queryset = Groceries.objects.all()
+#         price = self.request.query_params.get('price', None)
+#         if price is not None:
+#             queryset = queryset.filter(price=price)
+#         return queryset
+class GroceriesList(generics.ListAPIView):
+    queryset = Groceries.objects.all()
+    serializer_class = GroceriesSerializer
+    pagination_class=PageNumberPagination
+    filter_backends = [filters.SearchFilter,filters.OrderingFilter]
+    search_fields = ['^title','^description']
+    filterset_fields = ['price']
+    ordering_fields = ['price','created']
 
+    # ordering_fields = ['price']
 

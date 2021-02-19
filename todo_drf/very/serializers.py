@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import fields
 from rest_framework import serializers
-from .models import Blog,User
+from .models import Blog,User,Groceries
 
 class BlogSerializers(serializers.ModelSerializer):
     class Meta:
@@ -21,3 +21,8 @@ class RegisterSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+
+class GroceriesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Groceries
+        fields = ['id','title','description','created','price']
